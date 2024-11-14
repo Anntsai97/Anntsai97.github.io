@@ -67,7 +67,7 @@
         }
 
         /* 對話框設置 */
-        #output, #response {
+        #output, #response, .styled-input {
             font-size: 16px;
             margin-top: 15px;
             padding: 8px;
@@ -78,6 +78,7 @@
             color: #d4a1f5;
             opacity: 0;
             transition: opacity 0.5s ease;
+            border: none; /* 移除邊框 */
         }
 
         #response {
@@ -104,6 +105,12 @@
                 transform: scale(1.05);
                 box-shadow: 0px 6px 12px rgba(123, 56, 216, 0.7), 0px 0px 20px rgba(212, 161, 245, 0.9);
             }
+
+        /* 當輸入框啟用時改變透明度 */
+        .styled-input:focus {
+            opacity: 1;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -133,45 +140,86 @@
     <div id="output">您說的話會顯示在這裡...</div>
     <div id="response"></div>
 
-    <script>// 確認瀏覽器是否支援語音辨識
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert("您的瀏覽器不支援語音辨識功能，建議使用 Chrome 瀏覽器以取得最佳效果。");
+    <script>const startButton = document.getElementById('start-recording');
+        const outputDiv = document.getElementById('output');
+        const responseDiv = document.getElementById('response');
+        let isListening = false;
+
+        // 20 種預設答案
+        const answers = [
+            "是的，你的問題很有趣。",
+            "這是一個值得思考的問題。",
+            "這需要進一步的研究。",
+            "我認為答案可能會超出你的想像。",
+            "或許答案在你心中已經存在。",
+            "有時候答案就在眼前，只是我們未曾留意。",
+            "生命中的奧秘是值得探索的。",
+            "我可以感受到你的困惑，但答案需要時間來揭示。",
+            "這是一個需要智慧來解決的問題。",
+            "事情並不像表面看起來那麼簡單。",
+            "或許你應該從另一個角度去看待這個問題。",
+            "我建議你多觀察生活中的細節。",
+            "答案往往隱藏在最不顯眼的地方。",
+            "不要害怕失敗，答案就在探索的過程中。",
+            "成功的道路是充滿挑戰的，但值得努力。",
+            "答案可能會在你夢中出現。",
+            "這個問題的解答可能會帶來改變。",
+            "世界充滿無限可能，勇敢去追尋答案吧！",
+            "或許答案就在你朋友的話語中。",
+            "請相信自己，你擁有找到答案的能力。"
+        ];
+
+        // 檢查是否為手機裝置
+        function isMobileDevice() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        // 選擇男性聲音的功能
+        function getMaleVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            return voices.find(voice => (voice.lang === 'zh-TW' || voice.lang === 'zh-CN') && voice.name.includes('Male')) || voices[0];
+        }
+
+        if (!isMobileDevice()) {
+            // 桌面裝置：使用文字輸入替代語音辨識
+            alert("您的瀏覽器不支援語音辨識，請使用文字輸入您的問題。");
+
+            // 創建文字輸入框，並套用相同樣式
+            const textInput = document.createElement('input');
+            textInput.type = 'text';
+            textInput.placeholder = '輸入您的問題';
+            textInput.className = 'styled-input'; // 使用與 output 和 response 相同的樣式
+            textInput.style.opacity = 1; // 讓輸入框一開始可見
+            document.body.appendChild(textInput);
+
+            // 當使用者按下回車鍵時模擬語音輸入結果
+            textInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    const userInput = textInput.value;
+                    outputDiv.textContent = `您說了: "${userInput}"`;
+                    const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+                    responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
+                    responseDiv.style.opacity = 1;
+                    textInput.value = '';
+
+                    // 語音合成（男性聲音）
+                    if ('speechSynthesis' in window) {
+                        const synth = window.speechSynthesis;
+                        const utterThis = new SpeechSynthesisUtterance(randomAnswer);
+                        utterThis.pitch = 0.8;
+                        utterThis.rate = 0.9;
+                        utterThis.voice = getMaleVoice();
+                        synth.speak(utterThis);
+                    }
+                }
+            });
         } else {
+            // 手機裝置：啟用語音辨識
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'zh-TW';
             recognition.interimResults = true;
             recognition.maxAlternatives = 1;
 
-            const startButton = document.getElementById('start-recording');
-            const outputDiv = document.getElementById('output');
-            const responseDiv = document.getElementById('response');
-            let isListening = false;
-
-            // 20 種預設答案
-            const answers = [
-                "是的，你的問題很有趣。",
-                "這是一個值得思考的問題。",
-                "這需要進一步的研究。",
-                "我認為答案可能會超出你的想像。",
-                "或許答案在你心中已經存在。",
-                "有時候答案就在眼前，只是我們未曾留意。",
-                "生命中的奧秘是值得探索的。",
-                "我可以感受到你的困惑，但答案需要時間來揭示。",
-                "這是一個需要智慧來解決的問題。",
-                "事情並不像表面看起來那麼簡單。",
-                "或許你應該從另一個角度去看待這個問題。",
-                "我建議你多觀察生活中的細節。",
-                "答案往往隱藏在最不顯眼的地方。",
-                "不要害怕失敗，答案就在探索的過程中。",
-                "成功的道路是充滿挑戰的，但值得努力。",
-                "答案可能會在你夢中出現。",
-                "這個問題的解答可能會帶來改變。",
-                "世界充滿無限可能，勇敢去追尋答案吧！",
-                "或許答案就在你朋友的話語中。",
-                "請相信自己，你擁有找到答案的能力。"
-            ];
-
-            // 開始語音辨識
             startButton.addEventListener('mousedown', () => {
                 if (!isListening) {
                     recognition.start();
@@ -180,28 +228,21 @@
                 }
             });
 
-            // 當語音辨識過程中有即時結果時顯示
             recognition.addEventListener('result', (event) => {
                 let interimTranscript = '';
                 for (let i = 0; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
                     if (event.results[i].isFinal) {
-                        outputDiv.textContent = `您剛剛說: ${transcript}`;
+                        outputDiv.textContent = `您剛剛說: "${transcript}"`;
                         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-                        responseDiv.textContent = `劉老師: ${randomAnswer}`;
+                        responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
                         responseDiv.style.opacity = 1;
 
-                        // 語音回覆設置
                         const synth = window.speechSynthesis;
                         const utterThis = new SpeechSynthesisUtterance(randomAnswer);
-
-                        // 設置語音為男性聲音
                         utterThis.pitch = 0.8;
                         utterThis.rate = 0.9;
-                        synth.onvoiceschanged = () => {
-                            utterThis.voice = synth.getVoices().find(voice => voice.lang === 'zh-TW' && voice.name.includes('Male')) || synth.getVoices()[0];
-                            synth.speak(utterThis);
-                        };
+                        utterThis.voice = getMaleVoice();
                         synth.speak(utterThis);
                     } else {
                         interimTranscript += transcript;
@@ -210,7 +251,6 @@
                 outputDiv.textContent = `您說了: "${interimTranscript}"`;
             });
 
-            // 當語音辨識結束，重新啟動辨識
             recognition.addEventListener('end', () => {
                 isListening = false;
                 recognition.start();
