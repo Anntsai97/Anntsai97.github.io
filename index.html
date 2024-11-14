@@ -23,7 +23,7 @@
 
         /* 標題設置 */
         h1 {
-            font-size: 32px; /* 縮小標題字體大小 */
+            font-size: 32px;
             margin-bottom: 8px;
             color: #d4a1f5;
             text-shadow: 0px 0px 8px rgba(212, 161, 245, 0.7), 0px 0px 15px rgba(123, 56, 216, 0.7);
@@ -31,7 +31,7 @@
 
         /* 歡迎訊息設置 */
         #welcome-message {
-            font-size: 16px; /* 縮小字體 */
+            font-size: 16px;
             margin-bottom: 15px;
             font-style: italic;
             color: #e0baff;
@@ -39,17 +39,17 @@
 
         /* Logo 圖片設置 */
         .logo-image {
-            width: 150px; /* 縮小 logo 大小 */
+            width: 150px;
             margin-bottom: 15px;
         }
 
         /* 對話框設置 */
         #output, #response {
-            font-size: 16px; /* 縮小字體 */
+            font-size: 16px;
             margin-top: 15px;
             padding: 8px;
             width: 90%;
-            max-width: 300px; /* 限制最大寬度 */
+            max-width: 300px;
             border-radius: 8px;
             background-color: rgba(0, 0, 0, 0.7);
             color: #d4a1f5;
@@ -65,10 +65,10 @@
         button {
             background: linear-gradient(45deg, #7b38d8, #9f5fd4);
             color: #ffffff;
-            padding: 12px 20px; /* 縮小按鈕大小 */
+            padding: 12px 20px;
             border: none;
             cursor: pointer;
-            font-size: 16px; /* 縮小按鈕字體 */
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
             margin-top: 15px;
@@ -87,7 +87,7 @@
     <h1>歡迎來到神祕小屋</h1>
 
     <!-- 插入 logo 圖片 -->
-    <img src="path/to/your/image.jpg" alt="Logo" class="logo-image"> <!-- 替換為實際路徑 -->
+    <img src="messageImage_1730444038681.jpg" alt="Logo" class="logo-image">
 
     <p id="welcome-message">我是劉老師，你有什麼問題都可以問我，我會給予你滿意的答案。</p>
 
@@ -103,7 +103,7 @@
         const startButton = document.getElementById('start-recording');
         const outputDiv = document.getElementById('output');
         const responseDiv = document.getElementById('response');
-        let isListening = false; // 標記是否正在偵聽中
+        let isListening = false;
 
         // 預設答案資料庫
         const answers = [
@@ -146,8 +146,8 @@
 
         // 當語音辨識結束，重新啟動辨識
         recognition.addEventListener('end', () => {
-            isListening = false; // 重置偵聽標記
-            recognition.start(); // 重新啟動辨識
+            isListening = false;
+            recognition.start();
             isListening = true;
         });</script>
 </body>
