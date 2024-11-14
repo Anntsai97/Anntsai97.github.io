@@ -2,13 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"> <!-- 允許縮放 -->
     <title>神祕小屋互動設計</title>
     <style>
         /* 背景設置 */
         body {
-            font-family: "Georgia", serif; /* 改用手寫風格或古典字體 */
-            background: linear-gradient(135deg, #0d0b1e, #2c1338); /* 黑色與深紫色漸層背景 */
+            font-family: "Georgia", serif;
+            background: linear-gradient(135deg, #0d0b1e, #2c1338);
             color: #d4a1f5;
             text-align: center;
             display: flex;
@@ -103,13 +103,13 @@
         const outputDiv = document.getElementById('output');
         const responseDiv = document.getElementById('response');
 
-        // 預設答案資料庫
+        // 預設答案資料庫（去除標號）
         const answers = [
-            "答案1：是的，你的問題很有趣。",
-            "答案2：這是一個值得思考的問題。",
-            "答案3：這需要進一步的研究。",
-            "答案4：我認為答案可能會超出你的想像。",
-            "答案5：或許答案在你心中已經存在。"
+            "是的，你的問題很有趣。",
+            "這是一個值得思考的問題。",
+            "這需要進一步的研究。",
+            "我認為答案可能會超出你的想像。",
+            "或許答案在你心中已經存在。"
         ];
 
         // 開始語音辨識
