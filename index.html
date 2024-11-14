@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"> <!-- 允許縮放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>神祕小屋互動設計</title>
     <style>
         /* 背景設置 */
@@ -102,8 +102,9 @@
         const startButton = document.getElementById('start-recording');
         const outputDiv = document.getElementById('output');
         const responseDiv = document.getElementById('response');
+        let isListening = false; // 標記是否正在偵聽中
 
-        // 預設答案資料庫（去除標號）
+        // 預設答案資料庫
         const answers = [
             "是的，你的問題很有趣。",
             "這是一個值得思考的問題。",
@@ -114,8 +115,11 @@
 
         // 開始語音辨識
         startButton.addEventListener('mousedown', () => {
-            recognition.start();
-            outputDiv.style.opacity = 1;
+            if (!isListening) {
+                recognition.start();
+                isListening = true;
+                outputDiv.style.opacity = 1;
+            }
         });
 
         // 當語音辨識過程中有即時結果時顯示
@@ -139,9 +143,11 @@
             outputDiv.textContent = `您說了: "${interimTranscript}"`;
         });
 
-        // 當語音辨識結束
+        // 當語音辨識結束，重新啟動辨識
         recognition.addEventListener('end', () => {
-            recognition.stop();
+            isListening = false; // 重置偵聽標記
+            recognition.start(); // 重新啟動辨識
+            isListening = true;
         });</script>
 </body>
 </html>
