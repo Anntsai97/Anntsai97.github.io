@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>神祕小屋互動設計</title>
+    <title>神祕小屋互動</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
     <style>
         /* 背景設置 */
@@ -110,16 +110,16 @@
 
     <!-- 星空背景動畫 -->
     <script>function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
-            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-            document.body.appendChild(star);
-        }
-        for (let i = 0; i < 100; i++) {
-            createStar();
-        }</script>
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        document.body.appendChild(star);
+    }
+    for (let i = 0; i < 100; i++) {
+        createStar();
+    }</script>
 
     <h1>✨歡迎來到神祕小屋✨</h1>
 
@@ -134,60 +134,82 @@
     <div id="response"></div>
 
     <script>const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'zh-TW';
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 1;
+    recognition.lang = 'zh-TW';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
 
-        const startButton = document.getElementById('start-recording');
-        const outputDiv = document.getElementById('output');
-        const responseDiv = document.getElementById('response');
-        let isListening = false;
+    const startButton = document.getElementById('start-recording');
+    const outputDiv = document.getElementById('output');
+    const responseDiv = document.getElementById('response');
+    let isListening = false;
 
-        // 預設答案資料庫
-        const answers = [
-            "是的，你的問題很有趣。",
-            "這是一個值得思考的問題。",
-            "這需要進一步的研究。",
-            "我認為答案可能會超出你的想像。",
-            "或許答案在你心中已經存在。"
-        ];
+    // 20 種預設答案
+    const answers = [
+        "是的，你的問題很有趣。",
+        "這是一個值得思考的問題。",
+        "這需要進一步的研究。",
+        "我認為答案可能會超出你的想像。",
+        "或許答案在你心中已經存在。",
+        "有時候答案就在眼前，只是我們未曾留意。",
+        "生命中的奧秘是值得探索的。",
+        "我可以感受到你的困惑，但答案需要時間來揭示。",
+        "這是一個需要智慧來解決的問題。",
+        "事情並不像表面看起來那麼簡單。",
+        "或許你應該從另一個角度去看待這個問題。",
+        "我建議你多觀察生活中的細節。",
+        "答案往往隱藏在最不顯眼的地方。",
+        "不要害怕失敗，答案就在探索的過程中。",
+        "成功的道路是充滿挑戰的，但值得努力。",
+        "答案可能會在你夢中出現。",
+        "這個問題的解答可能會帶來改變。",
+        "世界充滿無限可能，勇敢去追尋答案吧！",
+        "或許答案就在你朋友的話語中。",
+        "請相信自己，你擁有找到答案的能力。"
+    ];
 
-        // 開始語音辨識
-        startButton.addEventListener('mousedown', () => {
-            if (!isListening) {
-                recognition.start();
-                isListening = true;
-                outputDiv.style.opacity = 1;
-            }
-        });
-
-        // 當語音辨識過程中有即時結果時顯示
-        recognition.addEventListener('result', (event) => {
-            let interimTranscript = '';
-            for (let i = 0; i < event.results.length; i++) {
-                const transcript = event.results[i][0].transcript;
-                if (event.results[i].isFinal) {
-                    outputDiv.textContent = `您剛剛說: ${transcript}`;
-                    const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-                    responseDiv.textContent = `劉老師: ${randomAnswer}`;
-                    responseDiv.style.opacity = 1;
-
-                    const synth = window.speechSynthesis;
-                    const utterThis = new SpeechSynthesisUtterance(randomAnswer);
-                    synth.speak(utterThis);
-                } else {
-                    interimTranscript += transcript;
-                }
-            }
-            outputDiv.textContent = `您說了: "${interimTranscript}"`;
-        });
-
-        // 當語音辨識結束，重新啟動辨識
-        recognition.addEventListener('end', () => {
-            isListening = false;
+    // 開始語音辨識
+    startButton.addEventListener('mousedown', () => {
+        if (!isListening) {
             recognition.start();
             isListening = true;
-        });</script>
+            outputDiv.style.opacity = 1;
+        }
+    });
+
+    // 當語音辨識過程中有即時結果時顯示
+    recognition.addEventListener('result', (event) => {
+        let interimTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                outputDiv.textContent = `您剛剛說: ${transcript}`;
+                const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+                responseDiv.textContent = `劉老師: ${randomAnswer}`;
+                responseDiv.style.opacity = 1;
+
+                // 語音回覆設置
+                const synth = window.speechSynthesis;
+                const utterThis = new SpeechSynthesisUtterance(randomAnswer);
+
+                // 設置語音為男性聲音
+                utterThis.pitch = 0.8;  // 調低音調
+                utterThis.rate = 0.9;   // 減慢語速，讓聲音更沉穩
+                utterThis.voice = synth.getVoices().find(voice => voice.lang === 'zh-TW' && voice.name.includes('Male')) || synth.getVoices()[0];
+
+                synth.speak(utterThis);
+            } else {
+                interimTranscript += transcript;
+            }
+        }
+        outputDiv.textContent = `您說了: "${interimTranscript}"`;
+    });
+
+    // 當語音辨識結束，重新啟動辨識
+    recognition.addEventListener('end', () => {
+        isListening = false;
+        recognition.start();
+        isListening = true;
+    });</script>
 
 </body>
 </html>
