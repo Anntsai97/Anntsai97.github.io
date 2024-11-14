@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>神祕小屋互動設計</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
     <style>
         /* 背景設置 */
         body {
@@ -18,7 +19,29 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            position: relative;
             padding: 10px;
+        }
+
+        /* 星空動畫 */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            opacity: 0;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* 標題設置 */
@@ -84,13 +107,28 @@
     </style>
 </head>
 <body>
-    <h1>歡迎來到神祕小屋</h1>
 
-    <!-- 插入 logo 圖片，修改為 png 格式 -->
+    <!-- 星空背景動畫 -->
+    <script>function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            document.body.appendChild(star);
+        }
+        for (let i = 0; i < 100; i++) {
+            createStar();
+        }</script>
+
+    <h1>歡迎來到神祕塔羅小屋</h1>
+
+    <!-- 插入 logo 圖片 -->
     <img src="logo.png" alt="Logo" class="logo-image">
 
     <p id="welcome-message">我是劉老師，你有什麼問題都可以問我，我會給予你滿意的答案。</p>
 
+    <!-- 語音互動按鈕與輸出框 -->
     <button id="start-recording">按住開始說話</button>
     <div id="output">您說的話會顯示在這裡...</div>
     <div id="response"></div>
@@ -150,5 +188,6 @@
             recognition.start();
             isListening = true;
         });</script>
+
 </body>
 </html>
