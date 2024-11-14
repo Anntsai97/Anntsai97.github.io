@@ -6,35 +6,78 @@
     <title>神祕小屋互動設計</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #2e2e2e, #5c5c5c);
+            color: #f4f4f9;
             text-align: center;
-            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        #output {
-            font-size: 24px;
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #ffdd57;
+            text-shadow: 2px 2px #333;
+        }
+
+        #welcome-message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        #output, #response {
+            font-size: 20px;
             margin-top: 20px;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         #response {
-            font-size: 20px;
-            color: green;
-            margin-top: 20px;
+            color: #ffdd57;
         }
+
+        button {
+            background-color: #ffdd57;
+            color: #333;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+            button:hover {
+                background-color: #ffcc00;
+                transform: scale(1.05);
+            }
     </style>
 </head>
 <body>
     <h1>歡迎來到神祕小屋</h1>
-    <p id="welcome-message">我是劉老師，你有甚麼問題都可以問我，我會給予你滿意的答案。</p>
+    <p id="welcome-message">我是劉老師，你有什麼問題都可以問我，我會給予你滿意的答案。</p>
 
     <button id="start-recording">按住開始說話</button>
     <div id="output">您說的話會顯示在這裡...</div>
     <div id="response"></div>
 
-    <script>// 確認瀏覽器是否支持 Web Speech API
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'zh-TW'; // 設定語言為中文（台灣）
-        recognition.interimResults = false;
+    <script>const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'zh-TW';
+        recognition.interimResults = true; // 開啟即時結果顯示
         recognition.maxAlternatives = 1;
 
         const startButton = document.getElementById('start-recording');
@@ -53,21 +96,31 @@
         // 開始語音辨識
         startButton.addEventListener('mousedown', () => {
             recognition.start();
+            outputDiv.style.opacity = 1; // 開始時顯示輸出區域
         });
 
-        // 當語音辨識成功時
+        // 當語音辨識過程中有即時結果時顯示
         recognition.addEventListener('result', (event) => {
-            const transcript = event.results[0][0].transcript;
-            outputDiv.textContent = `您剛剛說: "${transcript}"`;
+            let interimTranscript = '';
+            for (let i = 0; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    outputDiv.textContent = `您剛剛說: "${transcript}"`;
+                    // 隨機選擇一個答案並顯示
+                    const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+                    responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
+                    responseDiv.style.opacity = 1;
 
-            // 隨機選擇一個答案
-            const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-            responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
-
-            // 語音播放AI回應
-            const synth = window.speechSynthesis;
-            const utterThis = new SpeechSynthesisUtterance(randomAnswer);
-            synth.speak(utterThis);
+                    // 語音播放 AI 回應
+                    const synth = window.speechSynthesis;
+                    const utterThis = new SpeechSynthesisUtterance(randomAnswer);
+                    synth.speak(utterThis);
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            // 即時更新輸出區域，顯示目前的辨識內容
+            outputDiv.textContent = `您說了: "${interimTranscript}"`;
         });
 
         // 當語音辨識結束
