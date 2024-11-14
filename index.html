@@ -167,9 +167,9 @@
             for (let i = 0; i < event.results.length; i++) {
                 const transcript = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
-                    outputDiv.textContent = `您剛剛說: "${transcript}"`;
+                    outputDiv.textContent = `您剛剛說: ${transcript}`;
                     const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-                    responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
+                    responseDiv.textContent = `劉老師: ${randomAnswer}`;
                     responseDiv.style.opacity = 1;
 
                     const synth = window.speechSynthesis;
