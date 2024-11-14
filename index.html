@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>神祕小屋互動設計</title>
     <style>
+        /* 背景設置 */
         body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #2e2e2e, #5c5c5c);
-            color: #f4f4f9;
+            font-family: "Georgia", serif; /* 改用手寫風格或古典字體 */
+            background: linear-gradient(135deg, #0d0b1e, #2c1338); /* 黑色與深紫色漸層背景 */
+            color: #d4a1f5;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -16,21 +17,32 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
+        /* 標題設置 */
         h1 {
-            font-size: 36px;
+            font-size: 48px;
             margin-bottom: 10px;
-            color: #ffdd57;
-            text-shadow: 2px 2px #333;
+            color: #d4a1f5;
+            text-shadow: 0px 0px 10px rgba(212, 161, 245, 0.7), 0px 0px 20px rgba(123, 56, 216, 0.7);
         }
 
+        /* 歡迎訊息設置 */
         #welcome-message {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 20px;
             font-style: italic;
+            color: #e0baff;
         }
 
+        /* Logo 圖片設置 */
+        .logo-image {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        /* 對話框設置 */
         #output, #response {
             font-size: 20px;
             margin-top: 20px;
@@ -38,37 +50,44 @@
             width: 80%;
             max-width: 400px;
             border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #d4a1f5;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
 
         #response {
-            color: #ffdd57;
+            color: #c77df5;
         }
 
+        /* 按鈕設置 */
         button {
-            background-color: #ffdd57;
-            color: #333;
+            background: linear-gradient(45deg, #7b38d8, #9f5fd4);
+            color: #ffffff;
             padding: 15px 30px;
             border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             border-radius: 10px;
             margin-top: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 4px 10px rgba(123, 56, 216, 0.5), 0px 0px 15px rgba(212, 161, 245, 0.7);
         }
 
             button:hover {
-                background-color: #ffcc00;
+                background: linear-gradient(45deg, #9f5fd4, #7b38d8);
                 transform: scale(1.05);
+                box-shadow: 0px 6px 15px rgba(123, 56, 216, 0.7), 0px 0px 25px rgba(212, 161, 245, 0.9);
             }
     </style>
 </head>
 <body>
     <h1>歡迎來到神祕小屋</h1>
+
+    <!-- 插入 logo 圖片 -->
+    <img src="path/to/your/image.jpg" alt="Logo" class="logo-image"> <!-- 替換為實際路徑 -->
+
     <p id="welcome-message">我是劉老師，你有什麼問題都可以問我，我會給予你滿意的答案。</p>
 
     <button id="start-recording">按住開始說話</button>
@@ -77,7 +96,7 @@
 
     <script>const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'zh-TW';
-        recognition.interimResults = true; // 開啟即時結果顯示
+        recognition.interimResults = true;
         recognition.maxAlternatives = 1;
 
         const startButton = document.getElementById('start-recording');
@@ -96,7 +115,7 @@
         // 開始語音辨識
         startButton.addEventListener('mousedown', () => {
             recognition.start();
-            outputDiv.style.opacity = 1; // 開始時顯示輸出區域
+            outputDiv.style.opacity = 1;
         });
 
         // 當語音辨識過程中有即時結果時顯示
@@ -106,12 +125,10 @@
                 const transcript = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
                     outputDiv.textContent = `您剛剛說: "${transcript}"`;
-                    // 隨機選擇一個答案並顯示
                     const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
                     responseDiv.textContent = `劉老師回覆: ${randomAnswer}`;
                     responseDiv.style.opacity = 1;
 
-                    // 語音播放 AI 回應
                     const synth = window.speechSynthesis;
                     const utterThis = new SpeechSynthesisUtterance(randomAnswer);
                     synth.speak(utterThis);
@@ -119,7 +136,6 @@
                     interimTranscript += transcript;
                 }
             }
-            // 即時更新輸出區域，顯示目前的辨識內容
             outputDiv.textContent = `您說了: "${interimTranscript}"`;
         });
 
